@@ -10,7 +10,7 @@ if(session_status()==PHP_SESSION_NONE) {
 }
 
 //gets content, time sent, username, profile picture, and username color of each message in the database
-$sql = "SELECT content, time, name, avatar, color FROM messages, user, prefs WHERE user.id = messages.uid AND user.id = prefs.uid";
+$sql = "SELECT content, time, name, avatar, color, id FROM messages, user, prefs WHERE user.id = messages.uid AND user.id = prefs.uid";
 
 $result = mysqli_query($dbConnection, $sql);
 
@@ -41,15 +41,15 @@ if(!$result) {
 			echo "</div>";
 			
 			//begin echoing data of the current sql query row
-			echo "<div id='' class='message'>";
+			echo "<div id='message-".$row['id']."' class='message'>";
 			//prints user's avatar
-			echo "<img src='images/avatars/".$row['avatar'].".png' class='avatar' />";
+			echo "<img class='avatar avatar-".$row['id']."' src='images/avatars/".$row['avatar'].".png' />";
 
 			//begins the div that contains all the text data of the message i.e. not the avatar
 			echo "<div id='' class='messagecontentcontainer'>";
 			
 			//prints user's name and gives it the appropriate color
-			echo "<div id='' class='username' style='color: ".$row['color']."'>".$row['name']."</div>";
+			echo "<div id='' class='username name-".$row['id']."' style='color: ".$row['color']."'>".$row['name']."</div>";
 			
 			//store the name of the user so we can compare it with the next row in the sql query
 			$prevUser = $row['name'];
@@ -60,7 +60,7 @@ if(!$result) {
 			echo "<small>".$row['time']."</small>";
 			
 			//prints the content of the message itself
-			echo "<div id='' class='messagecontent'>";
+			echo "<div id='content-".$row['id']."' class='messagecontent'>";
 			echo "<p>".$row['content']."</p>";			
 		//else if the current user is the same as the previous user but this is their sixth consecutive message
 		} else if($prevUser == $row['name'] && $c >= 5) {
@@ -68,14 +68,14 @@ if(!$result) {
 			echo "</div>";
 			echo "</div>";
 			echo "</div>";
-			echo "<div id='' class='message'>";
-			echo "<img src='images/avatars/".$row['avatar'].".png' class='avatar' />";
-			echo "<div id='' class='messagecontentcontainer'>";
-			echo "<div id='' class='username' style='color: ".$row['color']."'>".$row['name']."</div>";
+			echo "<div id='message-".$row['id']."' class='message'>";
+			echo "<img class='avatar avatar-".$row['id']."' src='images/avatars/".$row['avatar'].".png' />";
+			echo "<div class='messagecontentcontainer'>";
+			echo "<div class='username name-".$row['id']."' style='color: ".$row['color']."'>".$row['name']."</div>";
 			$prevUser = $row['name'];
 			$c = 0;
 			echo "<small>".$row['time']."</small>";
-			echo "<div id='' class='messagecontent'>";
+			echo "<div class='messagecontent'>";
 			echo "<p>".$row['content']."</p>";				
 		//else if this is the first message in the database	
 		} else if($first) {
@@ -84,14 +84,14 @@ if(!$result) {
 			$first = false;
 			
 			//all code below is explained in prior if block
-			echo "<div id='' class='message'>";
-			echo "<img src='images/avatars/".$row['avatar'].".png' class='avatar' />";
-			echo "<div id='' class='messagecontentcontainer'>";
-			echo "<div id='' class='username' style='color: ".$row['color']."'>".$row['name']."</div>";
+			echo "<div id='message-".$row['id']."' class='message'>";
+			echo "<img class='avatar avatar-".$row['id']."' src='images/avatars/".$row['avatar'].".png' />";
+			echo "<div class='messagecontentcontainer'>";
+			echo "<div class='username name-".$row['id']."' style='color: ".$row['color']."'>".$row['name']."</div>";
 			$prevUser = $row['name'];
 			$c = 0;
 			echo "<small>".$row['time']."</small>";
-			echo "<div id='' class='messagecontent'>";
+			echo "<div class='messagecontent'>";
 			echo "<p>".$row['content']."</p>";
 		}
 	}

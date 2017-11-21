@@ -98,19 +98,6 @@ function signup($name, $password)
 	}
 }
 
-//removes session variables when user logs out
-function logout()
-{
-	if(isloggedin()) {
-		unset($_SESSION['name']);
-		unset($_SESSION['password']);
-		unset($_SESSION['id']);
-		return true;
-	} else {
-		return false;
-	}
-}
-
 function getID($name, $password) {
 	global $dbConnection;
 	$sql = "SELECT id FROM user WHERE name = '".$name."' AND password = '".$password."'";
@@ -140,7 +127,8 @@ function getColors() {
 	else
 	{
 		while ($row = $result -> fetch_assoc()) {
-			echo "<div class='color' style='background-color: ".$row['color']."' onclick='return updateColor(\"".$row['color']."\")' ></div>";
+			$color = $row["color"];
+			echo "<div class='color' style='background-color: ".$color."' onclick='return updateColor(\"".$color."\", \"".$_SESSION["id"]."\")' ></div>";
 		}
 		return true;
 	}
@@ -159,11 +147,79 @@ function getAvatars() {
 	{
 		while ($row = $result -> fetch_assoc()) {
 			$name = $row["name"];
-			echo "<img src='images/avatars/".$name.".png' class='thumbnail' id='".$name."'  onclick='return updateAvatar(\"".$name."\")'/>";
+			echo "<img src='images/avatars/".$name.".png' class='thumbnail' id='".$name."'  onclick='return updateAvatar(\"".$name."\", \"".$_SESSION["id"]."\")'/>";
 		}
 		return true;
 	}
 }
 
-//put getBackgrounds() here
+function getBgs() {
+	global $dbConnection;
+	$sql = "SELECT filename FROM backgrounds";
+	$result = mysqli_query($dbConnection, $sql);
+	if(!$result)
+	{
+		echo "SQL error: ".mysqli_error ($dbConnection);
+		return false;
+	}
+	else
+	{
+		while ($row = $result -> fetch_assoc()) {
+			$bg = $row["filename"];
+			echo "<div style='background: url(\"images/backgrounds/".$bg.".jpg\"); background-size: cover; background-position: center;' class='bg' id='".$bg."'  onclick='return updateBackground(\"".$bg."\", \"".$_SESSION["id"]."\")'></div>";
+		}
+		return true;
+	}
+}
+
+function getTheme() {
+	global $dbConnection;
+	$sql = "SELECT theme FROM prefs WHERE uid = '".$_SESSION["id"]."'";
+	$result = mysqli_query($dbConnection, $sql);
+	if(!$result)
+	{
+		echo "<div id='content' class='light'>";
+		return false;
+	}
+	else
+	{
+		$row = mysqli_fetch_assoc($result);
+		echo "<div id='content' class='".$row["theme"]."'>";
+		return true;
+	}
+}
+
+function getHeader() {
+	global $dbConnection;
+	$sql = "SELECT avatar, uid, color FROM prefs WHERE uid = '".$_SESSION["id"]."'";
+	$result = mysqli_query($dbConnection, $sql);
+	if(!$result)
+	{
+		echo "Not logged in.";
+		return false;
+	}
+	else
+	{
+		$row = mysqli_fetch_assoc($result);
+		echo "<img class='avatar-".$row['uid']."' src='images/avatars/".$row['avatar'].".png' /><p>Welcome, <span class='username name-".$row['uid']."' style='color: ".$row['color']."'>".$_SESSION['name']."</span>.</p><form id='logout' method='post' action='logout.php'><button name='logout' type='submit'>Log out</button></form>";
+		return true;
+	}
+}
+
+function showBG() {
+	global $dbConnection;
+	$sql = "SELECT filename FROM prefs, backgrounds WHERE filename = bg AND uid = '".$_SESSION["id"]."'";
+	$result = mysqli_query($dbConnection, $sql);
+	if(!$result)
+	{
+		echo "<div id='blur'></div>";
+		return false;
+	}
+	else
+	{
+		$row = mysqli_fetch_assoc($result);
+		echo "<div id='blur' style='background-image: url(\"images/backgrounds/".$row["filename"].".jpg\");'></div>";
+		return true;
+	}
+}
 ?>

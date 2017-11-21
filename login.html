@@ -1,27 +1,35 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0" charset="utf-8">
 		<title>Chat Client Login Page</title>
 		<link rel="stylesheet" href="login.css">
+		<script src="login.js"></script>
+		<!-- gets the Open Sans font -->
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i&amp;subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext,vietnamese" rel="stylesheet">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	</head>
 	<body>
-		<div class="login-page">
-			<div class="form">
-				<form class="register-form" method ="post">
-					<input type="text" name = "newName" placeholder="name"/>
-					<input type="password" name = "newPass" placeholder="password"/>
-					<input type="submit" value="Submit">
-					<p class="message">Already registered? <a href="#">Sign In</a></p>
-				</form>
-				<form class="login-form" method="post">
-					<input type="text" name = "name" placeholder="username"/>
-					<input type="password" name = "password" placeholder="password"/>
-					<input type="submit" value="Submit">
-					<p class="message">Not registered? <a href="#">Create an account</a></p>
-				</form>
+	<div id="content">
+			<div class="login-page">
+				<div class="form">
+					<form class="register-form show" method="post" id="reg">
+						<p>Register Account</p>
+						<input type="text" name="newName" placeholder="username"/>
+						<input type="password" name="newPass" placeholder="password"/>
+						<input type="submit" value="Submit">
+						<p class="message">Already registered? <a href="#" onclick="showLog()">Sign In</a></p>
+					</form>
+					<form class="login-form hide" method="post" id="log" style="position: fixed; z-index: -1;">
+						<p>Sign In</p>
+						<input type="text" name="name" placeholder="username"/>
+						<input type="password" name="password" placeholder="password"/>
+						<input type="submit" value="Submit">
+						<p class="message">Not registered? <a href="#" onclick="showReg()">Create an account</a></p>
+					</form>
+				</div>
 			</div>
-		</div>		
+		<div>	
 		<!--Background-->
 		<div id="blur">
 		</div>

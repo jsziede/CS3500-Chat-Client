@@ -42,6 +42,8 @@ if(session_status()==PHP_SESSION_NONE) {
 	
 	<!-- various functions -->
 	<script src="script.js"></script>
+	<!-- list of emojis -->
+	<script src="emojiList.js"></script>
 </head>
 <?php
 //if user is not logged in, they should not have access to this page
@@ -57,30 +59,41 @@ if(!isset($_SESSION['id'])) {
 	<!-- hidden div that contains the message data from the database -->
 	<!-- used so that we can seamlessly copy it into the visible messagebox div when the database changes -->
 	<div id="buffer" style="display: none;"></div>
-	<div id="content">
+	<?php getTheme(); ?>
 		<div id="message-container">
+			<div id="header"><?php getHeader(); ?></div>
 			<div id="messagebox">
 				<!-- We need this script in the HTML file so we can use the set interval function -->
 				<!-- If we get the socket to work with the project then we can get rid of this -->
 				<script>
-					//gets the messages once upon page load
-					getMessagesOnLoad();
-					//checks for new messages every 1 second
 					window.setInterval(function(){
 						getMessages();
 					}, 1000); //1000 milliseconds = 1 second
 	 		</script>
 			</div>
-			<div id="settings" style="display: none; opacity: 0;">
+			<div id="emojis">
+				<script>printEmojis();</script>
+			</div>
+			<div id="settings">
+				<h3>Dark theme</h3>
+				<div id="switch" onclick="toggleTheme()">
+					<div id="themeToggle"></div>
+					<script>getTheme();</script>
+				</div>
+				<h3>Username color</h3>
 				<?php getColors(); ?>
+				<br />
+				<h3>Avatar</h3>
 				<?php getAvatars(); ?>
-				<!-- getBackgrounds(); goes here -->
+				<br />
+				<h3>Background</h3>
+				<?php getBgs(); ?>
 			</div>
 			<div id="inputarea">
 				<!-- this form calls the sendMessage function  -->
 				<form action="" method="post" id="textbox" onsubmit="return sendMessage()" >
 					<div id="emoticon" onclick="toggleSettings()">&#x2699;</div>
-					<div id="emoticon">&#x1f914;</div>
+					<div id="emoticon" onclick="toggleEmojis()">&#x1f914;</div>
 					<input type="text" name="textmessage" class="textbox" id="textinput" />
 					<input type="submit" id="submit" value="Send" />
 				</form>
@@ -88,21 +101,12 @@ if(!isset($_SESSION['id'])) {
 		</div>
 	</div>
 	<!--Background-->
-	<div id="blur">
-	</div>	
+	<?php showBG(); ?>
 	
 	<!-- we also need this script on the HTML page -->
 	<script type="text/javascript">
 		//converts all emoji on page into image form rather than text form
 		twemoji.parse(document.body);
-		
-		//stores the messagebox div into a variable
-		var messageBody = document.querySelector('#messagebox');
-		
-		//supposed to make the scrollbar be at the bottom of the div by default.
-		//this emphasizes the newer messages over the older messages.
-		//this is not working perfectly at the moment.
-		messageBody.scrollTop = messageBody.scrollHeight;
 	</script>
 </body>
 </html>
