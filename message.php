@@ -56,22 +56,14 @@ if(!isset($_SESSION['id'])) {
 }
 ?>
 <body>
-	<!-- hidden div that contains the message data from the database -->
-	<!-- used so that we can seamlessly copy it into the visible messagebox div when the database changes -->
-	<div id="buffer" style="display: none;"></div>
-	<?php getTheme(); ?>
-		<div id="message-container">
-			<div id="header"><?php getHeader(); ?></div>
+	<div id="content" class="<?php getTheme();?>">
+		<div id= "message-container">
+			<div id="header"><?php getHeader(); ?></div>		
 			<div id="messagebox">
-				<!-- We need this script in the HTML file so we can use the set interval function -->
-				<!-- If we get the socket to work with the project then we can get rid of this -->
-				<script>
-					window.setInterval(function(){
-						getMessages();
-					}, 1000); //1000 milliseconds = 1 second
-	 		</script>
+				<!-- all messages will go here -->
+				<?php getMessagesOnLoad();?>
 			</div>
-			<div id="emojis">
+			<div id="emojis" style="display: none;">
 				<script>printEmojis();</script>
 			</div>
 			<div id="settings">
@@ -90,23 +82,24 @@ if(!isset($_SESSION['id'])) {
 				<?php getBgs(); ?>
 			</div>
 			<div id="inputarea">
+				<div id="textbox">
 				<!-- this form calls the sendMessage function  -->
-				<form action="" method="post" id="textbox" onsubmit="return sendMessage()" >
 					<div id="emoticon" onclick="toggleSettings()">&#x2699;</div>
 					<div id="emoticon" onclick="toggleEmojis()">&#x1f914;</div>
 					<input type="text" name="textmessage" class="textbox" id="textinput" />
 					<input type="submit" id="submit" value="Send" />
-				</form>
+				</div>
 			</div>
 		</div>
+		
 	</div>
 	<!--Background-->
 	<?php showBG(); ?>
 	
-	<!-- we also need this script on the HTML page -->
-	<script type="text/javascript">
+	<!-- We need this script on the HTML page -->
+	<script>
 		//converts all emoji on page into image form rather than text form
 		twemoji.parse(document.body);
 	</script>
 </body>
-</html>
+</html>									
